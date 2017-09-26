@@ -10,6 +10,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
 
@@ -25,7 +26,7 @@ public class TestBaseClass {
 	 * file. 3. Update hard coded paths of binary files. 4. Browser should be in
 	 * properties files
 	 */
-	@BeforeMethod
+	@BeforeClass
 	public void launchBrowser() {
 		browser = "chrome";
 		url = "http://OMZP1LHAQPA01.verizon.com:2040/App%20Web%20Pages/Generic/bmalogin.aspx";
@@ -91,3 +92,4 @@ public class TestBaseClass {
 	}
 	
 }
+ 

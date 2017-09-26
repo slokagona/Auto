@@ -16,7 +16,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class TestPricingRequest extends TestBaseClass {
-                String prReqId = "PR-1584";
+                String prReqId = "PR-1606";
                 @Test(priority=1)
                 public void testPriceRequest() {
                                 login("accnt", "1234");
@@ -31,7 +31,7 @@ public class TestPricingRequest extends TestBaseClass {
                                 prReqId = getPRRequest();
                                 System.out.println(prReqId);
                                 logout();
-                }
+                                                }
 
                 @Test(priority=2)
                 public void testValidateRequest() {
@@ -52,47 +52,66 @@ public class TestPricingRequest extends TestBaseClass {
                                 fileUpload();
                                 verifyMappings();
                                 typeMappingName(bc);
-                                clickUploadToDatabase();
+                               // clickUploadToDatabase();
+                                expandDemandManagement();
+                                expandDemandSetManagement();
+                                clickDemandSetStaging();
+                                String status = getDemandSetStatus();
+                                System.out.println(status);
+                                Assert.assertEquals(status, "Completed");
+                                Assert.assertTrue(isNorecordsMessageDIsplayed());
                                 logout();
                 }
 
+                public void clickOnGenerateRevenue(){
+                	scrollToTop();
+                	driver.findElement(By.xpath("//span[contains(@title,'Generate Revenue')]")).click();
+                	sleep(10);
+                }
                 
-                public void verifyUploadStatus(String bc){
+                public boolean isNorecordsMessageDIsplayed(){
+                	return driver.findElements(By.xpath("//table[contains(@id,'ctl00_MainPage_SummaryUI_dfScreenCntrl_ctrl0_grd43110_RadGridUI_ctl00')]//div[contains(text(),'No records to display.')]")).size() >0 ;
+                }
+                public void clickDemandSetStaging() {
+                	  
+                		sleep(2);
+                      driver.findElement(By.xpath("//a[contains(text(),'Demand Set Staging')]")).click();
+				}
+
+                public String getDemandSetStatus(){
+                	return driver.findElement(By.xpath("//tr[contains(@id,'ctl00_MainPage_SummaryUI_dfScreenCntrl')]//td[4]")).getText();
+                }
+				public void verifyUploadStatus(String bc){
                                 String status = driver.findElement(By.xpath("//table[@id='ctl00_MainPage_RadUpload_GrdUploads_RadGridUI_ctl00']//tbody/tr[contains(@id,'ctl00_MainPage_RadUpload_GrdUploads_RadGridUI')]//td[contains(text(),'"+bc+"')][1]//preceding-sibling::td[3]")).getText();
                                 System.out.println(status);
                                 Assert.assertEquals(status, "");
                 }
                 public void expandDemandManagement() {
-
-                                if (driver.findElement(By.xpath("//a[contains(@title,'Demand Management')]")).getAttribute("aria-expanded")
-                                                                .contains("false")) {
-                                                driver.findElement(
-                                                                                By.xpath("//a[contains(@title,'Demand Management')]//span[contains(@class,'nav-label')]")).click();
-                                }
+                	sleep(5);
+                    driver.findElement(
+                            By.xpath("//a[contains(@title,'Demand Management')]")).click();
                 }
 
-                public void expandDemandSetManagement() {
-
-                                if (driver.findElement(By.xpath("//a[contains(@title,'Demand Management')]//following-sibling::ul//li[2]/a"))
-                                                              .getAttribute("aria-expanded").contains("false")) {
-                                                driver.findElement(By.xpath("//a[contains(@title,'Demand Management')]//following-sibling::ul//li[2]/a"))
+                public void expandDemandSetManagement() 
+                {
+                	sleep(2);
+                                                driver.findElement(By.xpath("//a[contains(text(),'Demand Set Management')]"))
                                                                                 .click();
-                                }
+                               
                 }
 
                 public void typeMappingName(String bc){
                                 driver.findElement(By.id("ctl00_MainPage_RadUpload_txtMapName")).sendKeys(bc);;
                 }
                 public void expandUpdateDemandSet() {
-
-                                if (driver.findElement(By.xpath("//a[contains(@title,'Demand Management')]//following-sibling::ul//li[2]/a//following-sibling::ul/li[5]/a"))
-                                                                .getAttribute("aria-expanded").contains("false")) {
-                                                driver.findElement(By.xpath("//a[contains(@title,'Demand Management')]//following-sibling::ul//li[2]/a//following-sibling::ul/li[5]/as"))
+                	sleep(2);
+                                                driver.findElement(By.xpath("//a[contains(text(),'Update Demand Set')]"))
                                                                                 .click();
-                                }
+                         
                 }
                 
                 public void clickUploadDemandSet(){
+                	sleep(2);
                                 driver.findElement(By.xpath("//a[contains(text(),'Upload Demand Set')]")).click();
                 }
                 
@@ -104,7 +123,9 @@ public class TestPricingRequest extends TestBaseClass {
                 }
                 public void fileUpload(){
                                 //driver.findElement(By.id("ctl00_MainPage_RadUpload_RadUploadFilefile0")).sendKeys("");
-                                sleep(15);
+                                sleep(5);
+                                uploadThroughROBOT("C:\\Users\\sankisu\\Downloads\\Demand small.xlsx");  
+                                sleep(5);
                 }
 
                 public void activitiesAndWorkflow(String bc) {
@@ -255,7 +276,7 @@ public class TestPricingRequest extends TestBaseClass {
 
                                 driver.findElement(By.id("ctl00_MainPage_SCRUIPReq_dfScreenCntrl_ctrl0_ATT14885_RadBtnSubmit")).click();
 
-                                sleep(5);
+                                sleep(10);
 
                                 String imageValue = driver
                                                                 .findElement(By
@@ -263,7 +284,14 @@ public class TestPricingRequest extends TestBaseClass {
                                                                 .getAttribute("src");
                                 System.out.println(imageValue);
                                 if (!imageValue.contains("green-accept.png")) {
-                                                Assert.fail();
+                                	sleep(5);
+                                	imageValue = driver.findElement(By.xpath("//tr[contains(@id,'ctl00_MainPage_SCRUIPReq_dfScreenCntrl_ctrl0_ATT14885_grdDocChkList_ctl00')]//img"))
+                                            .getAttribute("src");
+                                	if(!imageValue.contains("green-accept.png")){
+                                		 System.out.println(imageValue);
+                                		 Assert.fail();
+                                	}
+                                               
                                 }
 
                                 // driver.findElement(By.xpath("//span[@title='Create Request & Assign
